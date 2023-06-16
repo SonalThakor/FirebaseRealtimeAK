@@ -2,53 +2,48 @@ package com.example.firebaserealtimeak.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import com.example.firebaserealtimeak.R
+import com.example.firebaserealtimeak.databinding.ActivityInsertionBinding
 import com.example.firebaserealtimeak.db.EmployeeModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class InsertionActivity : AppCompatActivity() {
 
-    private lateinit var empNameEditText: EditText
-    private lateinit var empAgeEditText: EditText
-    private lateinit var empSalaryEditText: EditText
-    private lateinit var btnSave: Button
-
-    private lateinit var dbRef:DatabaseReference
+    private lateinit var binding: ActivityInsertionBinding
+    private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_insertion)
+        binding = ActivityInsertionBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        empNameEditText = findViewById(R.id.empNameEditText)
-        empAgeEditText = findViewById(R.id.empAgeEditText)
-        empSalaryEditText = findViewById(R.id.empSalaryEditText)
-        btnSave = findViewById(R.id.btnSave)
+        dbRef = FirebaseDatabase.getInstance().getReference("Employees")
 
-         dbRef = FirebaseDatabase.getInstance().getReference("Employees")
-
-        btnSave.setOnClickListener{
+        binding.btnSave.setOnClickListener {
             saveEmployeeData()
         }
     }
 
-    private  fun saveEmployeeData() {
-        //getting values
-        val empName = empNameEditText.text.toString()
-        val empAge = empAgeEditText.text.toString()
-        val empSalary = empSalaryEditText.text.toString()
+    private fun saveEmployeeData() {
+        // Getting values
+        val empName = binding.empNameEditText.text.toString()
+        val empAge = binding.empAgeEditText.text.toString()
+        val empSalary = binding.empSalaryEditText.text.toString()
 
         if (empName.isEmpty()) {
-            empNameEditText.error = "Please enter name"
+            binding.empNameEditText.error = "Please enter name"
+            return
         }
         if (empAge.isEmpty()) {
-            empAgeEditText.error = "Please enter age"
+            binding.empAgeEditText.error = "Please enter age"
+            return
         }
         if (empSalary.isEmpty()) {
-            empSalaryEditText.error = "Please enter salary"
+            binding.empSalaryEditText.error = "Please enter salary"
+            return
         }
 
         val empId = dbRef.push().key!!
@@ -59,12 +54,11 @@ class InsertionActivity : AppCompatActivity() {
             .addOnCompleteListener {
                 Toast.makeText(this, "Data inserted successfully", Toast.LENGTH_LONG).show()
 
-                empNameEditText.text.clear()
-                empAgeEditText.text.clear()
-                empSalaryEditText.text.clear()
-
-
-            }.addOnFailureListener { err ->
+                binding.empNameEditText.text.clear()
+                binding.empAgeEditText.text.clear()
+                binding.empSalaryEditText.text.clear()
+            }
+            .addOnFailureListener { err ->
                 Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()
             }
     }

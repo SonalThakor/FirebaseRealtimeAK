@@ -13,12 +13,27 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:layout_gravity="center"
-        android:text="Firebase Data "
+        android:text="@string/firebase_data"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <Button
+        android:id="@+id/imageBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="@string/image_upload"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/firebaseBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
 

@@ -4,29 +4,28 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaserealtimeak.R
 import com.example.firebaserealtimeak.adapter.EmpAdapter
+import com.example.firebaserealtimeak.databinding.ActivityFetchingBinding
 import com.example.firebaserealtimeak.db.EmployeeModel
 import com.google.firebase.database.*
 
 class FetchingActivity : AppCompatActivity() {
 
-    private lateinit var empRecyclerView: RecyclerView
-    private lateinit var tvLoadingData: TextView
+    private lateinit var binding: ActivityFetchingBinding
     private lateinit var empList: ArrayList<EmployeeModel>
     private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fetching)
+        binding = ActivityFetchingBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        empRecyclerView = findViewById(R.id.rvEmp)
-        empRecyclerView.layoutManager = LinearLayoutManager(this)
-        empRecyclerView.setHasFixedSize(true)
-        tvLoadingData = findViewById(R.id.tvLoadingData)
+        binding.rvEmp.layoutManager = LinearLayoutManager(this)
+        binding.rvEmp.setHasFixedSize(true)
 
         empList = arrayListOf<EmployeeModel>()
 
@@ -35,8 +34,8 @@ class FetchingActivity : AppCompatActivity() {
 
     private fun getEmployeesData() {
 
-        empRecyclerView.visibility = View.GONE
-        tvLoadingData.visibility = View.VISIBLE
+        binding.rvEmp.visibility = View.GONE
+        binding.tvLoadingData.visibility = View.VISIBLE
 
         dbRef = FirebaseDatabase.getInstance().getReference("Employees")
 
@@ -49,9 +48,9 @@ class FetchingActivity : AppCompatActivity() {
                         empList.add(empData!!)
                     }
                     val mAdapter = EmpAdapter(empList)
-                    empRecyclerView.adapter = mAdapter
+                    binding.rvEmp.adapter = mAdapter
 
-                    mAdapter.setOnItemClickListener(object : EmpAdapter.onItemClickListener{
+                    mAdapter.setOnItemClickListener(object : EmpAdapter.onItemClickListener {
                         override fun onItemClick(position: Int) {
 
                             val intent = Intent(this@FetchingActivity, EmployeeDetailsActivity::class.java)
@@ -66,13 +65,13 @@ class FetchingActivity : AppCompatActivity() {
 
                     })
 
-                    empRecyclerView.visibility = View.VISIBLE
-                    tvLoadingData.visibility = View.GONE
+                    binding.rvEmp.visibility = View.VISIBLE
+                    binding.tvLoadingData.visibility = View.GONE
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                // Handle onCancelled if needed
             }
 
         })

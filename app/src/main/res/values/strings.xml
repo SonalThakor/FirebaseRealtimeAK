@@ -14,4 +14,11 @@
     <string name="employee_salary">Employee Salary</string>
     <string name="employee_age">Employee Age</string>
     <string name="employee_name">Employee Name</string>
+    <string name="firebase_data">Firebase Data</string>
+    <string name="image_upload">Image Upload</string>
+    <string name="upload">Upload</string>
+    <string name="show_all">Show All</string>
+    <string name="choose_file">Choose file</string>
+    <string name="enter_file_name">Enter file name</string>
+    <string name="show_uploads">Show Uploads</string>
 </resources>

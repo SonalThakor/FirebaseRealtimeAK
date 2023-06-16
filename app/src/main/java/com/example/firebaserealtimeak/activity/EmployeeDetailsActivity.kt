@@ -9,62 +9,50 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.firebaserealtimeak.R
+import com.example.firebaserealtimeak.databinding.ActivityEmployeeDetailsBinding
 import com.example.firebaserealtimeak.db.EmployeeModel
 import com.google.firebase.database.FirebaseDatabase
 
 class EmployeeDetailsActivity : AppCompatActivity() {
 
-    private lateinit var tvEmpId: TextView
-    private lateinit var tvEmpName: TextView
-    private lateinit var tvEmpAge: TextView
-    private lateinit var tvEmpSalary: TextView
-    private lateinit var btnUpdate: Button
-    private lateinit var btnDelete: Button
-
+    private lateinit var binding: ActivityEmployeeDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_employee_details)
+        binding = ActivityEmployeeDetailsBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        initView()
         setValuesToViews()
 
-        btnUpdate.setOnClickListener {
+        binding.btnUpdate.setOnClickListener {
             openUpdateDialog(
-                intent.getStringExtra("empId").toString(),
-                intent.getStringExtra("empName").toString()
+                binding.tvEmpId.text.toString(),
+                binding.tvEmpName.text.toString()
             )
         }
 
-        btnDelete.setOnClickListener {
+        binding.btnDelete.setOnClickListener {
             deleteRecord(
-                intent.getStringExtra("empId").toString()
+                binding.tvEmpId.text.toString()
             )
         }
-
     }
 
-    private fun initView() {
-        tvEmpId = findViewById(R.id.tvEmpId)
-        tvEmpName = findViewById(R.id.tvEmpName)
-        tvEmpAge = findViewById(R.id.tvEmpAge)
-        tvEmpSalary = findViewById(R.id.tvEmpSalary)
-
-        btnUpdate = findViewById(R.id.btnUpdate)
-        btnDelete = findViewById(R.id.btnDelete)
-    }
 
     private fun setValuesToViews() {
-        tvEmpId.text = intent.getStringExtra("empId")
-        tvEmpName.text = intent.getStringExtra("empName")
-        tvEmpAge.text = intent.getStringExtra("empAge")
-        tvEmpSalary.text = intent.getStringExtra("empSalary")
-
+        // Set values using binding object
+        binding.apply {
+            tvEmpId.text = intent.getStringExtra("empId")
+            tvEmpName.text = intent.getStringExtra("empName")
+            tvEmpAge.text = intent.getStringExtra("empAge")
+            tvEmpSalary.text = intent.getStringExtra("empSalary")
+        }
     }
 
     private fun deleteRecord(
         id: String
-    ){
+    ) {
         val dbRef = FirebaseDatabase.getInstance().getReference("Employees").child(id)
         val mTask = dbRef.removeValue()
 
@@ -74,7 +62,7 @@ class EmployeeDetailsActivity : AppCompatActivity() {
             val intent = Intent(this, FetchingActivity::class.java)
             finish()
             startActivity(intent)
-        }.addOnFailureListener{ error ->
+        }.addOnFailureListener { error ->
             Toast.makeText(this, "Deleting Err ${error.message}", Toast.LENGTH_LONG).show()
         }
     }
@@ -95,9 +83,9 @@ class EmployeeDetailsActivity : AppCompatActivity() {
 
         val btnUpdateData = mDialogView.findViewById<Button>(R.id.btnUpdateData)
 
-        etEmpName.setText(intent.getStringExtra("empName").toString())
-        etEmpAge.setText(intent.getStringExtra("empAge").toString())
-        etEmpSalary.setText(intent.getStringExtra("empSalary").toString())
+        etEmpName.setText(binding.tvEmpName.text.toString())
+        etEmpAge.setText(binding.tvEmpAge.text.toString())
+        etEmpSalary.setText(binding.tvEmpSalary.text.toString())
 
         mDialog.setTitle("Updating $empName Record")
 
@@ -114,10 +102,12 @@ class EmployeeDetailsActivity : AppCompatActivity() {
 
             Toast.makeText(applicationContext, "Employee Data Updated", Toast.LENGTH_LONG).show()
 
-            //we are setting updated data to our textViews
-            tvEmpName.text = etEmpName.text.toString()
-            tvEmpAge.text = etEmpAge.text.toString()
-            tvEmpSalary.text = etEmpSalary.text.toString()
+            // Set updated data using binding object
+            binding.apply {
+                tvEmpName.text = etEmpName.text.toString()
+                tvEmpAge.text = etEmpAge.text.toString()
+                tvEmpSalary.text = etEmpSalary.text.toString()
+            }
 
             alertDialog.dismiss()
         }
@@ -133,5 +123,4 @@ class EmployeeDetailsActivity : AppCompatActivity() {
         val empInfo = EmployeeModel(id, name, age, salary)
         dbRef.setValue(empInfo)
     }
-
 }
